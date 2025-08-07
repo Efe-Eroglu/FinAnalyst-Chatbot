@@ -1,10 +1,12 @@
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, validator, ConfigDict
 from datetime import datetime
 
 
 class ChatRequest(BaseModel):
     """Request model for chat endpoint."""
+    
+    model_config = ConfigDict(protected_namespaces=())
     
     message: str = Field(
         ...,
@@ -43,6 +45,8 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     """Response model for chat endpoint."""
     
+    model_config = ConfigDict(protected_namespaces=())
+    
     response: str = Field(
         ...,
         description="AI generated response"
@@ -72,6 +76,8 @@ class ChatResponse(BaseModel):
 class HealthResponse(BaseModel):
     """Health check response model."""
     
+    model_config = ConfigDict(protected_namespaces=())
+    
     status: str = Field(
         default="healthy",
         description="Service status"
@@ -95,6 +101,8 @@ class HealthResponse(BaseModel):
 
 class ModelInfoResponse(BaseModel):
     """Model information response model."""
+    
+    model_config = ConfigDict(protected_namespaces=())
     
     model_name: str = Field(
         description="Model name"
@@ -120,13 +128,16 @@ class ModelInfoResponse(BaseModel):
         description="Maximum output token length"
     )
     
-    loaded_at: datetime = Field(
+    loaded_at: Optional[datetime] = Field(
+        None,
         description="When the model was loaded"
     )
 
 
 class ErrorResponse(BaseModel):
     """Error response model."""
+    
+    model_config = ConfigDict(protected_namespaces=())
     
     error: str = Field(
         description="Error message"

@@ -66,6 +66,14 @@ async def get_model_info():
     try:
         model_info = model_service.get_model_info()
         
+        # Handle loaded_at properly
+        loaded_at = None
+        if model_info["loaded_at"]:
+            try:
+                loaded_at = datetime.fromisoformat(model_info["loaded_at"])
+            except:
+                loaded_at = None
+        
         response = ModelInfoResponse(
             model_name=model_info["model_name"],
             model_path=model_info["model_path"],
@@ -73,7 +81,7 @@ async def get_model_info():
             parameters=model_info["parameters"],
             max_input_length=model_info["max_input_length"],
             max_output_length=model_info["max_output_length"],
-            loaded_at=datetime.fromisoformat(model_info["loaded_at"]) if model_info["loaded_at"] else None
+            loaded_at=loaded_at
         )
         
         return response

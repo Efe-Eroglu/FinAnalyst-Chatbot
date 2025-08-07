@@ -4,6 +4,7 @@ from typing import Optional, Dict, Any
 from datetime import datetime
 import torch
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from peft import PeftModel, PeftConfig
 from app.core.config import settings
 
 logger = logging.getLogger(__name__)
@@ -25,19 +26,39 @@ class ModelService:
             logger.info(f"Loading model from {settings.MODEL_PATH}")
             logger.info(f"Using device: {self.device}")
             
-            # For now, we'll simulate model loading
-            # In production, this would load the actual model
-            logger.info("Model loading simulated - using mock responses")
+            # Load PEFT configuration
+            peft_config = PeftConfig.from_pretrained(settings.MODEL_PATH)
+            base_model_name = peft_config.base_model_name_or_path
+            
+            logger.info(f"Base model: {base_model_name}")
+            
+            # Load tokenizer
+            self.tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+            
+            # Load base model
+            base_model = AutoModelForSeq2SeqLM.from_pretrained(
+                base_model_name,
+                torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
+                device_map="auto" if self.device == "cuda" else None
+            )
+            
+            # Load PEFT model
+            self.model = PeftModel.from_pretrained(base_model, settings.MODEL_PATH)
+            
+            # Move to device if not using device_map
+            if self.device == "cpu":
+                self.model = self.model.to(self.device)
             
             self.model_loaded = True
             self.loaded_at = datetime.utcnow()
             
-            logger.info("Mock model loaded successfully")
+            logger.info(f"Model loaded successfully at {self.loaded_at}")
             return True
             
         except Exception as e:
             logger.error(f"Failed to load model: {str(e)}")
             self.model_loaded = False
+            self.loaded_at = None
             return False
     
     async def generate_response(
@@ -57,19 +78,39 @@ class ModelService:
             # Prepare input text
             input_text = self._prepare_input(message, table_data, context)
             
-            # Simulate processing time
-            import asyncio
-            await asyncio.sleep(1)  # Simulate processing
+            logger.info(f"Input text: {input_text[:100]}...")
             
-            # Generate mock response
-            if "karlılık" in message.lower() or "profit" in message.lower():
-                response = f"Bu şirketin karlılık analizi: {message} sorusu için detaylı analiz yapıldı. Karlılık oranı %30 olarak hesaplandı."
-            elif "büyüme" in message.lower() or "growth" in message.lower():
-                response = f"Büyüme trendi analizi: {message} sorusu için büyüme oranı %25 olarak hesaplandı."
-            else:
-                response = f"Finansal analiz sonucu: {message} sorusu için detaylı analiz tamamlandı. Sonuçlar yukarıda belirtilmiştir."
+            # Tokenize input
+            inputs = self.tokenizer(
+                input_text,
+                max_length=settings.MAX_INPUT_LENGTH,
+                truncation=True,
+                padding=True,
+                return_tensors="pt"
+            )
+            
+            # Move inputs to device
+            inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            # Generate response
+            with torch.no_grad():
+                outputs = self.model.generate(
+                    **inputs,
+                    max_new_tokens=settings.MAX_OUTPUT_LENGTH,
+                    temperature=settings.TEMPERATURE,
+                    top_p=settings.TOP_P,
+                    do_sample=settings.DO_SAMPLE,
+                    num_beams=settings.NUM_BEAMS,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                    eos_token_id=self.tokenizer.eos_token_id
+                )
+            
+            # Decode response
+            response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
             
             processing_time = time.time() - start_time
+            
+            logger.info(f"Generated response: {response[:100]}...")
             
             return {
                 "response": response,
@@ -77,7 +118,7 @@ class ModelService:
                 "input_length": len(input_text),
                 "output_length": len(response),
                 "model_info": {
-                    "model_path": "mock-model",
+                    "model_path": settings.MODEL_PATH,
                     "device": self.device,
                     "loaded_at": self.loaded_at.isoformat() if self.loaded_at else None
                 }
