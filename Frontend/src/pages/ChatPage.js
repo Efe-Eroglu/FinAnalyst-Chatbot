@@ -17,8 +17,11 @@ import {
   TrendingUp,
   MessageSquare,
   Clock,
-  ChevronRight
+  ChevronRight,
+  Wifi,
+  WifiOff
 } from 'lucide-react';
+import websocketService from '../services/websocketService';
 
 const ChatPage = () => {
   const [messages, setMessages] = useState([
