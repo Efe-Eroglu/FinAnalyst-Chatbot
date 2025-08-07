@@ -10,6 +10,119 @@
   body {
     @apply bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen;
   }
+
+  /* Modern Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: rgba(241, 245, 249, 0.8);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(226, 232, 240, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    transition: all 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(135deg, #0369a1, #1d4ed8);
+    transform: scale(0.95);
+  }
+
+  ::-webkit-scrollbar-corner {
+    background: rgba(241, 245, 249, 0.8);
+    border-radius: 10px;
+  }
+
+  /* Firefox Scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #0ea5e9 rgba(241, 245, 249, 0.8);
+  }
+
+  /* Custom scrollbar for specific elements */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #0ea5e9 rgba(241, 245, 249, 0.8);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(241, 245, 249, 0.6);
+    border-radius: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+  }
+
+  /* Dark mode scrollbar support */
+  @media (prefers-color-scheme: dark) {
+    ::-webkit-scrollbar-track {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(51, 65, 85, 0.3);
+    }
+
+    ::-webkit-scrollbar-corner {
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    * {
+      scrollbar-color: #0ea5e9 rgba(30, 41, 59, 0.8);
+    }
+  }
+
+  /* Smooth scrolling for the entire page */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar for chat messages */
+  .chat-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #0ea5e9 rgba(241, 245, 249, 0.4);
+  }
+
+  .chat-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chat-scrollbar::-webkit-scrollbar-track {
+    background: rgba(241, 245, 249, 0.4);
+    border-radius: 3px;
+  }
+
+  .chat-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+    border-radius: 3px;
+  }
+
+  .chat-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #0284c7, #2563eb);
+  }
 }
 
 @layer components {
