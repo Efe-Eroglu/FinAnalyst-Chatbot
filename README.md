@@ -58,6 +58,16 @@ finalayst/
 └── README.md
 ```
 
+### 🏠 **Ana Sayfa**
+<img width="1908" height="931" alt="hero" src="https://github.com/user-attachments/assets/034f3a97-1575-4d03-a960-69174ea2b699" />
+
+
+### 💬 **Chat Arayüzü**
+<img width="1916" height="942" alt="chat" src="https://github.com/user-attachments/assets/49c78118-ba04-4764-bc2f-53a897ea01ca" />
+
+
+
+
 ## 🚀 **Hızlı Başlangıç**
 
 ### **Gereksinimler**
@@ -272,3 +282,4 @@ Proje hakkında sorularınız için:
   <p>Made with by <strong>Efe Eroğlu</strong></p>
   <p>FinAnalyst - Akıllı Finansal Soru-Cevap Asistanı</p>
 </div>
+
