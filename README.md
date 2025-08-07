@@ -70,10 +70,6 @@ finalayst/
 
 ## 🚀 **Hızlı Başlangıç**
 
-### **Gereksinimler**
-- Node.js 18+
-- Python 3.11+
-- Git
 
 ### **1. Projeyi Klonlayın**
 ```bash
@@ -282,4 +278,5 @@ Proje hakkında sorularınız için:
   <p>Made with by <strong>Efe Eroğlu</strong></p>
   <p>FinAnalyst - Akıllı Finansal Soru-Cevap Asistanı</p>
 </div>
+
 
