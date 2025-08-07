@@ -36,7 +36,7 @@
 ## 🏗️ **Proje Yapısı**
 
 ```
-finqa/
+finalayst/
 ├── Frontend/                 # React Frontend
 │   ├── public/
 │   ├── src/
@@ -67,7 +67,7 @@ finqa/
 
 ### **1. Projeyi Klonlayın**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Efe-Eroglu/FinAnalyst-Chatbot.git
 cd finqa
 ```
 
@@ -257,15 +257,7 @@ Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için [LICENSE](LICE
 **Efe Eroğlu**
 - Email: efeeroglu.dev@gmail.com
 - GitHub: [@efeeroglu](https://github.com/efeeroglu)
-- LinkedIn: [Efe Eroğlu](https://linkedin.com/in/efeeroglu)
-
-## 🙏 **Teşekkürler**
-
-- [Google Flan-T5](https://huggingface.co/google/flan-t5-large) - AI Model
-- [FastAPI](https://fastapi.tiangolo.com/) - Backend Framework
-- [React](https://reactjs.org/) - Frontend Framework
-- [Tailwind CSS](https://tailwindcss.com/) - CSS Framework
-- [Framer Motion](https://www.framer.com/motion/) - Animation Library
+- LinkedIn: [Efe Eroğlu](https://linkedin.com/in/efeeroglu) 
 
 ## 📞 **İletişim**
 

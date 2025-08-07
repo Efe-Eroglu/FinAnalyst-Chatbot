@@ -20,11 +20,13 @@ class Settings:
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
     
     # Model Settings
-    MODEL_PATH: str = "/models/finbot-peft-model/"
+    MODEL_PATH: str = "app/models/"
     MAX_INPUT_LENGTH: int = 512
     MAX_OUTPUT_LENGTH: int = 128
     TEMPERATURE: float = 0.7
     TOP_P: float = 0.95
+    DO_SAMPLE: bool = True
+    NUM_BEAMS: int = 4
     
     # Rate Limiting
     RATE_LIMIT_PER_MINUTE: int = 60

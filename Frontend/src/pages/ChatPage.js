@@ -36,6 +36,7 @@ const ChatPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
 
@@ -43,7 +44,48 @@ const ChatPage = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Removed automatic scrolling - let users control scrolling manually
+  // WebSocket connection setup
+  useEffect(() => {
+    const connectWebSocket = async () => {
+      try {
+        await websocketService.connect();
+        setIsConnected(true);
+        
+        // Set up message handler
+        websocketService.onMessage((data) => {
+          if (data.type === 'bot_response') {
+            const botMessage = {
+              id: Date.now(),
+              type: 'bot',
+              content: data.response,
+              timestamp: new Date(data.timestamp),
+              processingTime: data.processing_time
+            };
+            setMessages(prev => [...prev, botMessage]);
+            setIsLoading(false);
+          } else if (data.type === 'error') {
+            const errorMessage = {
+              id: Date.now(),
+              type: 'bot',
+              content: `Hata: ${data.error}`,
+              timestamp: new Date(data.timestamp)
+            };
+            setMessages(prev => [...prev, errorMessage]);
+            setIsLoading(false);
+          }
+        });
+      } catch (error) {
+        console.error('WebSocket connection failed:', error);
+        setIsConnected(false);
+      }
+    };
+
+    connectWebSocket();
+
+    return () => {
+      websocketService.disconnect();
+    };
+  }, []);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -59,17 +101,35 @@ const ChatPage = () => {
     setInputMessage('');
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
-      const botMessage = {
+    try {
+      // Send message via WebSocket
+      const messageId = websocketService.sendMessage(inputMessage);
+      
+      // If WebSocket is not connected, fall back to mock response
+      if (!isConnected) {
+        setTimeout(() => {
+          const botMessage = {
+            id: Date.now() + 1,
+            type: 'bot',
+            content: `Finansal analiz sorunuz için teşekkürler! "${inputMessage}" sorusunu analiz ediyorum. Yüklenen dosyalarınızı inceliyorum ve size detaylı bir analiz sunacağım.`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, botMessage]);
+          setIsLoading(false);
+        }, 2000);
+      }
+    } catch (error) {
+      console.error('Error sending message:', error);
+      setIsLoading(false);
+      
+      const errorMessage = {
         id: Date.now() + 1,
         type: 'bot',
-        content: `Finansal analiz sorunuz için teşekkürler! "${inputMessage}" sorusunu analiz ediyorum. Yüklenen dosyalarınızı inceliyorum ve size detaylı bir analiz sunacağım.`,
+        content: 'Mesaj gönderilirken bir hata oluştu. Lütfen tekrar deneyin.',
         timestamp: new Date()
       };
-      setMessages(prev => [...prev, botMessage]);
-      setIsLoading(false);
-    }, 2000);
+      setMessages(prev => [...prev, errorMessage]);
+    }
   };
 
   const handleFileUpload = (event) => {
@@ -161,11 +221,17 @@ const ChatPage = () => {
               <div className="flex items-center space-x-3">
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-white/20 px-4 py-2 rounded-full backdrop-blur-sm"
+                  className={`px-4 py-2 rounded-full backdrop-blur-sm flex items-center space-x-2 ${
+                    isConnected ? 'bg-green-500/20' : 'bg-red-500/20'
+                  }`}
                 >
-                  <span className="text-white text-sm font-medium flex items-center space-x-2">
-                    <Sparkles className="h-4 w-4" />
-                    <span>Aktif</span>
+                  {isConnected ? (
+                    <Wifi className="h-4 w-4 text-green-300" />
+                  ) : (
+                    <WifiOff className="h-4 w-4 text-red-300" />
+                  )}
+                  <span className="text-white text-sm font-medium">
+                    {isConnected ? 'Bağlı' : 'Bağlantı Yok'}
                   </span>
                 </motion.div>
               </div>
