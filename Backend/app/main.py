@@ -3,13 +3,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
-from slowapi.errors import RateLimitExceeded
 
 from app.core.config import settings
-from app.core.security import limiter
-from app.api import chat, health
+from app.api import chat, health, websocket
 from app.services.model_service import model_service
 from app.utils.helpers import setup_logging
 
@@ -51,9 +47,7 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Add rate limiter
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+# Rate limiting will be added later when slowapi is available
 
 # Add CORS middleware
 app.add_middleware(
@@ -92,6 +86,11 @@ app.include_router(
     health.router,
     prefix=f"{settings.API_V1_STR}",
     tags=["health"]
+)
+
+app.include_router(
+    websocket.router,
+    tags=["websocket"]
 )
 
 

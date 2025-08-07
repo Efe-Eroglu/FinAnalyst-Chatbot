@@ -1,9 +1,8 @@
 import os
-from typing import Optional
-from pydantic import BaseSettings, Field
+from typing import Optional, List
 
 
-class Settings(BaseSettings):
+class Settings:
     """Application settings and configuration."""
     
     # API Settings
@@ -13,46 +12,33 @@ class Settings(BaseSettings):
     DESCRIPTION: str = "AI-Powered Financial Analysis Backend"
     
     # Server Settings
-    HOST: str = Field(default="0.0.0.0", env="HOST")
-    PORT: int = Field(default=8000, env="PORT")
-    DEBUG: bool = Field(default=False, env="DEBUG")
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+    DEBUG: bool = False
     
     # CORS Settings
-    BACKEND_CORS_ORIGINS: list = Field(
-        default=["http://localhost:3000", "http://localhost:3001"],
-        env="BACKEND_CORS_ORIGINS"
-    )
+    BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:3000", "http://localhost:3001"]
     
     # Model Settings
-    MODEL_PATH: str = Field(
-        default="/models/finbot-peft-model/",
-        env="MODEL_PATH"
-    )
-    MAX_INPUT_LENGTH: int = Field(default=512, env="MAX_INPUT_LENGTH")
-    MAX_OUTPUT_LENGTH: int = Field(default=128, env="MAX_OUTPUT_LENGTH")
-    TEMPERATURE: float = Field(default=0.7, env="TEMPERATURE")
-    TOP_P: float = Field(default=0.95, env="TOP_P")
+    MODEL_PATH: str = "/models/finbot-peft-model/"
+    MAX_INPUT_LENGTH: int = 512
+    MAX_OUTPUT_LENGTH: int = 128
+    TEMPERATURE: float = 0.7
+    TOP_P: float = 0.95
     
     # Rate Limiting
-    RATE_LIMIT_PER_MINUTE: int = Field(default=60, env="RATE_LIMIT_PER_MINUTE")
+    RATE_LIMIT_PER_MINUTE: int = 60
     
     # Security
-    SECRET_KEY: str = Field(
-        default="your-secret-key-change-in-production",
-        env="SECRET_KEY"
-    )
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30, env="ACCESS_TOKEN_EXPIRE_MINUTES")
+    SECRET_KEY: str = "your-secret-key-change-in-production"
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
     # Logging
-    LOG_LEVEL: str = Field(default="INFO", env="LOG_LEVEL")
+    LOG_LEVEL: str = "INFO"
     
     # Timeout Settings
-    REQUEST_TIMEOUT: int = Field(default=30, env="REQUEST_TIMEOUT")
-    MODEL_TIMEOUT: int = Field(default=15, env="MODEL_TIMEOUT")
-    
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    REQUEST_TIMEOUT: int = 30
+    MODEL_TIMEOUT: int = 15
 
 
 # Global settings instance

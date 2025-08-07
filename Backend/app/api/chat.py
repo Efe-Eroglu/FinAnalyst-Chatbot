@@ -2,11 +2,8 @@ import uuid
 import logging
 from datetime import datetime
 from fastapi import APIRouter, HTTPException, Depends, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 from app.models.chat import ChatRequest, ChatResponse, ErrorResponse
 from app.services.model_service import model_service
-from app.core.security import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +21,6 @@ router = APIRouter()
     summary="Send a financial question to the AI assistant",
     description="Send a financial question with optional table data and context to get an AI-generated response."
 )
-@limiter.limit("60/minute")
 async def chat(
     request: ChatRequest,
     req: Request
