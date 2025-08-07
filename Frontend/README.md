@@ -173,17 +173,3 @@ npm test
 3. Commit yapın (`git commit -m 'Add amazing feature'`)
 4. Push yapın (`git push origin feature/amazing-feature`)
 5. Pull Request oluşturun
-
-## 📄 Lisans
-
-Bu proje MIT lisansı altında lisanslanmıştır.
-
-## 📞 İletişim
-
-- **E-posta**: info@finanalyst.com
-- **Website**: https://finanalyst.com
-- **Dokümantasyon**: https://docs.finanalyst.com
-
----
-
-**FinAnalyst** - Akıllı Finansal Analiz Asistanı 🚀
